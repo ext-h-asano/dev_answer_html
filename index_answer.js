@@ -30,7 +30,7 @@ window.onload = function() {
 }
 
 function startVideo(localId, remoteId) {
-	if (navigator.mediaDevices.getUserMedia) {
+	if (navigator.mediaDevices.getDisplayMedia) {
 		if (window.stream) {
 			// 既存のストリームを破棄
 			try {
@@ -47,7 +47,7 @@ function startVideo(localId, remoteId) {
 			audio: true,
 			video: true
 		};
-		navigator.mediaDevices.getUserMedia(constraints).then(stream => {
+		navigator.mediaDevices.getDisplayMedia(constraints).then(stream => {
 			window.stream = stream;
 			localVideo.srcObject = stream;
 			startServerConnection(localId, remoteId);
@@ -55,7 +55,7 @@ function startVideo(localId, remoteId) {
 			alert('Camera start error.\n\n' + e.name + ': ' + e.message);
 		});
 	} else {
-		alert('Your browser does not support getDisplayMedia API');
+		alert('Your browser does not support getUserMedia API');
 	}
 }
 
@@ -103,17 +103,16 @@ function startPeerConnection(sdpType) {
 	queue = new Array();
 	pc = new RTCPeerConnection(peerConnectionConfig);
 
-
 	// コネクション状態の変更を監視
 	pc.onconnectionstatechange = function() {
 		console.log('Connection State:', pc.connectionState);
 		if (pc.connectionState === 'connected') {
-				console.log('Peer connection established successfully.');
+			console.log('Peer connection established successfully.');
 		} else if (pc.connectionState === 'disconnected' || pc.connectionState === 'failed') {
-				console.log('Peer connection failed or disconnected.');
+			console.log('Peer connection failed or disconnected.');
 		}
 	};
-	
+
 	pc.onicecandidate = function(event) {
 		if (event.candidate) {
 			// ICE送信
