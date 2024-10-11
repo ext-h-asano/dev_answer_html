@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Webカメラ映像を表示</title>
+  <style>
+    video {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Webカメラ映像の表示</h1>
+  <video id="webcamVideo" autoplay playsinline></video>
+  <p id="errorMessage" style="color: red;"></p>
+
+  <script>
+    const video = document.getElementById('webcamVideo');
+    const errorMessage = document.getElementById('errorMessage');
+
+    // カメラ映像を取得してvideo要素に表示
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        video.srcObject = stream;
+      })
+      .catch(error => {
+        errorMessage.textContent = 'カメラのアクセスが拒否されました: ' + error.message;
+      });
+  </script>
+
+</body>
+</html>
