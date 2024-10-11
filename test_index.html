@@ -7,6 +7,7 @@
   <style>
     video {
       width: 100%;
+      /* heightは指定しない */
     }
   </style>
 </head>
@@ -24,6 +25,21 @@
     navigator.mediaDevices.getUserMedia({ video: true })
       .then(stream => {
         video.srcObject = stream;
+
+        // ビデオのメタデータが読み込まれたときの処理
+        video.addEventListener('loadedmetadata', () => {
+          // ビデオの実際の幅と高さを取得
+          const videoWidth = video.videoWidth;
+          console.log(videoWidth)
+          const videoHeight = video.videoHeight;
+          console.log(videoHeight)
+
+          // ビデオのアスペクト比を計算
+          const aspectRatio = videoWidth / videoHeight;
+
+          // ビデオ要素の高さを設定
+          video.style.height = `${video.clientWidth / aspectRatio}px`;
+        });
       })
       .catch(error => {
         errorMessage.textContent = 'カメラのアクセスが拒否されました: ' + error.message;
