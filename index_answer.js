@@ -47,7 +47,7 @@ window.onload = function() {
 
 function startVideo(localId, remoteId) {
 	console.log('[startVideo] localId:', localId, ', remoteId:', remoteId);
-	if (navigator.mediaDevices.getUserMedia) {
+	if (navigator.mediaDevices.getDisplayMedia) {
 		if (window.stream) {
 			// 既存のストリームを破棄
 			try {
@@ -63,13 +63,10 @@ function startVideo(localId, remoteId) {
 		// カメラとマイクの開始
 		const constraints = {
 			audio: true,
-			video: {
-				width: 480,
-				height: 928
-			}
+			video: true
 		};
 		console.log('[startVideo] Requesting user media with constraints:', constraints);
-		navigator.mediaDevices.getUserMedia(constraints).then(stream => {
+		navigator.mediaDevices.getDisplayMedia(constraints).then(stream => {
 			console.log('[startVideo] User media obtained.');
 			window.stream = stream;
 			// localVideo.srcObject = stream;
