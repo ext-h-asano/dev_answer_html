@@ -1,6 +1,6 @@
 let localVideo, remoteVideo;
 let localId, remoteId;
-let sc, scDataChannel, pc, queue;
+let sc, pc, queue;
 let dataChannel; // データチャンネルの参照
 // タッチ開始位置を保存する変数
 let startX, startY;
@@ -111,11 +111,6 @@ function startServerConnection(localId, remoteId) {
 		this.send(JSON.stringify({open: {local: localId, remote: remoteId}}));
 	};
 
-	scDataChannel.onopen = function(event) {
-		console.log('[startServerConnection] scDataChannel connection opened.');
-		// サーバーに接続情報を通知
-		this.send(JSON.stringify({open: {local: localId, remote: remoteId}}));
-	};
 	sc.onclose = function(event) {
 		console.log('[startServerConnection] WebSocket connection closed. Reconnecting in 5 seconds...');
 		clearInterval(this._pingTimer);
@@ -126,16 +121,7 @@ function startServerConnection(localId, remoteId) {
 			}
 		}, 5000, this);
 	}
-	scDataChannel.onclose = function(event) {
-		console.log('[startServerConnection] scDataChannel connection closed. Reconnecting in 5 seconds...');
-		clearInterval(this._pingTimer);
-		setTimeout(conn => {
-			if (sc === conn) {
-				// 一定時間経過後にサーバーへ再接続
-				startServerConnection(localId, remoteId);
-			}
-		}, 5000, this);
-	}
+
 	sc._pingTimer = setInterval(() => {
 		// 接続確認
 		console.log('[startServerConnection] Sending ping to server.');
