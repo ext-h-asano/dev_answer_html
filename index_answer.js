@@ -47,7 +47,7 @@ window.onload = function() {
 
 function startVideo(localId, remoteId) {
 	console.log('[startVideo] localId:', localId, ', remoteId:', remoteId);
-	if (navigator.mediaDevices.getDisplayMedia) {
+	if (navigator.mediaDevices.getUserMedia) {
 		if (window.stream) {
 			// 既存のストリームを破棄
 			try {
@@ -66,7 +66,7 @@ function startVideo(localId, remoteId) {
 			video: true
 		};
 		console.log('[startVideo] Requesting user media with constraints:', constraints);
-		navigator.mediaDevices.getDisplayMedia(constraints).then(stream => {
+		navigator.mediaDevices.getUserMedia(constraints).then(stream => {
 			console.log('[startVideo] User media obtained.');
 			window.stream = stream;
 			// localVideo.srcObject = stream;
