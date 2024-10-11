@@ -7,38 +7,39 @@
   <style>
     video {
       width: 100%;
-      /* heightは指定しない */
+      height: auto;
+      display: block;
     }
   </style>
 </head>
 <body>
 
   <h1>Webカメラ映像の表示</h1>
-  <video id="webcamVideo" autoplay playsinline></video>
+  <video id="webcamVideo" autoplay playsinline muted></video>
   <p id="errorMessage" style="color: red;"></p>
 
   <script>
     const video = document.getElementById('webcamVideo');
     const errorMessage = document.getElementById('errorMessage');
 
-    // カメラ映像を取得してvideo要素に表示
     navigator.mediaDevices.getUserMedia({ video: true })
       .then(stream => {
         video.srcObject = stream;
-
-        // ビデオのメタデータが読み込まれたときの処理
-        video.addEventListener('loadedmetadata', () => {
-          // ビデオの実際の幅と高さを取得
+        video.muted = true; // ビデオをミュートに設定
+        return video.play(); // 再生を開始
+      })
+      .then(() => {
+        // ビデオが再生を開始したときの処理
+        video.addEventListener('playing', () => {
           const videoWidth = video.videoWidth;
-          console.log(videoWidth)
           const videoHeight = video.videoHeight;
-          console.log(videoHeight)
 
-          // ビデオのアスペクト比を計算
-          const aspectRatio = videoWidth / videoHeight;
-
-          // ビデオ要素の高さを設定
-          video.style.height = `${video.clientWidth / aspectRatio}px`;
+          if (videoWidth > 0 && videoHeight > 0) {
+            const aspectRatio = videoWidth / videoHeight;
+            video.style.height = `${video.clientWidth / aspectRatio}px`;
+          } else {
+            console.error('ビデオのサイズを取得できませんでした。');
+          }
         });
       })
       .catch(error => {
