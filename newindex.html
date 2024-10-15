@@ -56,13 +56,13 @@
 
     async function startWebcam() {
       try {
-        const maxResolution = await getMaxResolution();
-        resolutionInfo.textContent = `利用可能な最大解像度: ${maxResolution.width}x${maxResolution.height}`;
+        // const maxResolution = await getMaxResolution();
+        // resolutionInfo.textContent = `利用可能な最大解像度: ${maxResolution.width}x${maxResolution.height}`;
 
         const stream = await navigator.mediaDevices.getUserMedia({
           video: {
-            width: { ideal: maxResolution.width },
-            height: { ideal: maxResolution.height }
+            width: { min: 480 },
+            height: { min: 928 }
           }
         });
 
