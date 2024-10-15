@@ -42,8 +42,6 @@
           // ビデオのアスペクト比を計算
           const aspectRatio = videoWidth / videoHeight;
 
-          // ビデオ要素の高さを設定
-          video.style.height = ${video.clientWidth / aspectRatio}px;
         });
       })
       .catch(error => {
