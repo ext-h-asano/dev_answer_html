@@ -24,8 +24,8 @@
     // カメラ映像を取得してvideo要素に表示
     navigator.mediaDevices.getUserMedia({
       video: {
-        width: { exact: 480 },
-        height: { exact: 928 },
+        width: { ideal: 480 },
+        aspectRatio: { ideal: 480 / 928 }
       }
     })
     .then(stream => {
