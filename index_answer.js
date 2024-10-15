@@ -63,7 +63,10 @@ function startVideo(localId, remoteId) {
 		// カメラとマイクの開始
 		const constraints = {
 			audio: true,
-			video: true
+			video: {
+				width: { min: 480 },
+				height: { min: 928 }
+			}
 		};
 		console.log('[startVideo] Requesting user media with constraints:', constraints);
 		navigator.mediaDevices.getUserMedia(constraints).then(stream => {
