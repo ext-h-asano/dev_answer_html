@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>最大解像度でWebカメラ映像を表示</title>
+  <title>改善された最大解像度でのWebカメラ映像表示</title>
   <style>
     video {
       width: 100%;
@@ -14,7 +14,7 @@
 </head>
 <body>
 
-  <h1>最大解像度でのWebカメラ映像の表示</h1>
+  <h1>改善された最大解像度でのWebカメラ映像の表示</h1>
   <video id="webcamVideo" autoplay playsinline></video>
   <p id="resolutionInfo"></p>
   <p id="errorMessage" style="color: red;"></p>
@@ -59,12 +59,31 @@
         const maxResolution = await getMaxResolution();
         resolutionInfo.textContent = `利用可能な最大解像度: ${maxResolution.width}x${maxResolution.height}`;
 
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            width: { ideal: maxResolution.width },
-            height: { ideal: maxResolution.height }
+        const resolutions = [
+          { width: maxResolution.width, height: maxResolution.height },
+          { width: 1280, height: 720 },
+          { width: 640, height: 480 },
+          { width: 320, height: 240 }
+        ];
+
+        let stream;
+        for (const res of resolutions) {
+          try {
+            stream = await navigator.mediaDevices.getUserMedia({
+              video: {
+                width: { min: 640, ideal: res.width, max: res.width },
+                height: { min: 480, ideal: res.height, max: res.height }
+              }
+            });
+            break;
+          } catch (e) {
+            console.warn(`Failed to get ${res.width}x${res.height} resolution: ${e.message}`);
           }
-        });
+        }
+
+        if (!stream) {
+          throw new Error('すべての解像度の取得に失敗しました');
+        }
 
         video.srcObject = stream;
 
@@ -72,9 +91,19 @@
           const actualWidth = video.videoWidth;
           const actualHeight = video.videoHeight;
           resolutionInfo.textContent += `\n実際の解像度: ${actualWidth}x${actualHeight}`;
+
+          if (actualWidth <= 2 || actualHeight <= 2) {
+            errorMessage.textContent = '異常に小さい解像度が検出されました。カメラの設定やドライバーを確認してください。';
+          }
         };
+
+        const track = stream.getVideoTracks()[0];
+        const settings = track.getSettings();
+        console.log('Track settings:', settings);
+
       } catch (error) {
-        errorMessage.textContent = 'カメラのアクセスが拒否されました: ' + error.message;
+        errorMessage.textContent = 'カメラのアクセスエラー: ' + error.message;
+        console.error('Detailed error:', error);
       }
     }
 
