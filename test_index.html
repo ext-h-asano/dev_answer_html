@@ -20,25 +20,15 @@
   <script>
     const video = document.getElementById('webcamVideo');
     const errorMessage = document.getElementById('errorMessage');
+    const con = navigator.mediaDevices.getSupportedConstraints();
+
+    console.log(con)
 
     // カメラ映像を取得してvideo要素に表示
     navigator.mediaDevices.getUserMedia(
       {video: true})
     .then(stream => {
         video.srcObject = stream;
-
-        // ビデオのメタデータが読み込まれたときの処理
-        video.addEventListener('loadedmetadata', () => {
-          // ビデオの実際の幅と高さを取得
-          const videoWidth = video.videoWidth;
-          console.log(videoWidth)
-          const videoHeight = video.videoHeight;
-          console.log(videoHeight)
-
-          // ビデオのアスペクト比を計算
-          const aspectRatio = videoWidth / videoHeight;
-
-        });
       })
       .catch(error => {
         errorMessage.textContent = 'カメラのアクセスが拒否されました: ' + error.message;
