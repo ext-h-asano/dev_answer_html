@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>最大解像度でWebカメラ映像を表示</title>
+  <style>
+    video {
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>最大解像度でのWebカメラ映像の表示</h1>
+  <video id="webcamVideo" autoplay playsinline></video>
+  <p id="resolutionInfo"></p>
+  <p id="errorMessage" style="color: red;"></p>
+
+  <script>
+    const video = document.getElementById('webcamVideo');
+    const resolutionInfo = document.getElementById('resolutionInfo');
+    const errorMessage = document.getElementById('errorMessage');
+
+    async function getMaxResolution() {
+      try {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const videoDevices = devices.filter(device => device.kind === 'videoinput');
+
+        let maxWidth = 0;
+        let maxHeight = 0;
+
+        for (const device of videoDevices) {
+          const stream = await navigator.mediaDevices.getUserMedia({ video: { deviceId: device.deviceId } });
+          const track = stream.getVideoTracks()[0];
+          const capabilities = track.getCapabilities();
+
+          if (capabilities.width && capabilities.width.max > maxWidth) {
+            maxWidth = capabilities.width.max;
+          }
+          if (capabilities.height && capabilities.height.max > maxHeight) {
+            maxHeight = capabilities.height.max;
+          }
+
+          stream.getTracks().forEach(track => track.stop());
+        }
+
+        return { width: maxWidth, height: maxHeight };
+      } catch (error) {
+        console.error('Error getting max resolution:', error);
+        throw error;
+      }
+    }
+
+    async function startWebcam() {
+      try {
+        const maxResolution = await getMaxResolution();
+        resolutionInfo.textContent = `利用可能な最大解像度: ${maxResolution.width}x${maxResolution.height}`;
+
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            width: { ideal: maxResolution.width },
+            height: { ideal: maxResolution.height }
+          }
+        });
+
+        video.srcObject = stream;
+
+        video.onloadedmetadata = () => {
+          const actualWidth = video.videoWidth;
+          const actualHeight = video.videoHeight;
+          resolutionInfo.textContent += `\n実際の解像度: ${actualWidth}x${actualHeight}`;
+        };
+      } catch (error) {
+        errorMessage.textContent = 'カメラのアクセスが拒否されました: ' + error.message;
+      }
+    }
+
+    startWebcam();
+  </script>
+
+</body>
+</html>

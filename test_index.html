@@ -20,9 +20,7 @@
   <script>
     const video = document.getElementById('webcamVideo');
     const errorMessage = document.getElementById('errorMessage');
-    const con = navigator.mediaDevices.getSupportedConstraints();
 
-    console.log(con)
 
     // カメラ映像を取得してvideo要素に表示
     navigator.mediaDevices.getUserMedia(
