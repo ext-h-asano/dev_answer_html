@@ -7,6 +7,8 @@
   <style>
     video {
       width: 100%;
+      max-width: 100%;
+      height: auto;
       /* heightは指定しない */
     }
   </style>
@@ -24,7 +26,10 @@
 
     // カメラ映像を取得してvideo要素に表示
     navigator.mediaDevices.getUserMedia(
-      {video: true})
+      {video: {
+        width: {min: 480},
+        height: {min: 928}
+      }})
     .then(stream => {
         video.srcObject = stream;
       })
