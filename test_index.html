@@ -22,11 +22,13 @@
     const errorMessage = document.getElementById('errorMessage');
 
     // カメラ映像を取得してvideo要素に表示
-    navigator.mediaDevices.getUserMedia({ video: {
-      width: { exact: 480 },
-      height: { exact: 928 }
-    }})
-      .then(stream => {
+    navigator.mediaDevices.getUserMedia({
+      video: {
+        width: { exact: 480 },
+        height: { exact: 928 },
+      }
+    })
+    .then(stream => {
         video.srcObject = stream;
 
         // ビデオのメタデータが読み込まれたときの処理
