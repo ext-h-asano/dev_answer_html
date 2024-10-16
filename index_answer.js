@@ -65,7 +65,7 @@ function startVideo(localId, remoteId) {
 			audio: true,
 			video: {
 				width: { min: 480 },
-				height: { min: 928 }
+				height: { min: 968 }
 			}
 		};
 		console.log('[startVideo] Requesting user media with constraints:', constraints);
