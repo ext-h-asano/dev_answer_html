@@ -42,6 +42,8 @@ window.onload = function() {
 	// 		sendMessage(message);
 	// 	}
 	// });
+	const audiodevice = navigator.mediaDevices.enumerateDevices()
+	console.log(audiodevice)
 
 	}
 

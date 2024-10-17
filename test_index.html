@@ -3,40 +3,43 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Webカメラ映像を表示</title>
+  <title>ブラウザの解像度とDPRを取得</title>
   <style>
-    video {
-      width: 100%;
-      max-width: 100%;
-      height: auto;
-      /* heightは指定しない */
+    /* 赤い箱のスタイル */
+    .red-box {
+      width: 480px;
+      height: 10px;
+      background-color: red;
     }
   </style>
 </head>
 <body>
+  <h1>ブラウザの解像度とDPR</h1>
+  <p id="resolution"></p>
+  <p id="dpr"></p>
 
-  <h1>Webカメラ映像の表示</h1>
-  <video id="webcamVideo" autoplay playsinline></video>
-  <p id="errorMessage" style="color: red;"></p>
+  <!-- 赤い箱を表示 -->
+  <div class="red-box"></div>
 
   <script>
-    const video = document.getElementById('webcamVideo');
-    const errorMessage = document.getElementById('errorMessage');
+    // ブラウザの幅と高さを取得
+    const width = window.innerWidth;
+    const height = window.innerHeight;
 
+    // デバイスピクセル比を取得
+    const dpr = window.devicePixelRatio;
 
-    // カメラ映像を取得してvideo要素に表示
-    navigator.mediaDevices.getUserMedia(
-      {video: {
-        width: {min: 480},
-        height: {min: 968}
-      }})
-    .then(stream => {
-        video.srcObject = stream;
-      })
-      .catch(error => {
-        errorMessage.textContent = 'カメラのアクセスが拒否されました: ' + error.message;
-      });
+    // 取得した解像度とDPRを表示
+    document.getElementById('resolution').textContent = `幅: ${width}px, 高さ: ${height}px`;
+    document.getElementById('dpr').textContent = `デバイスピクセル比: ${dpr}`;
+
+    // タッチイベントのリスナーを追加
+    document.addEventListener('touchstart', function(event) {
+      const touch = event.touches[0];
+      const x = touch.clientX;
+      const y = touch.clientY;
+      console.log(`タッチされた座標: X=${x}, Y=${y}`);
+    });
   </script>
-
 </body>
 </html>
