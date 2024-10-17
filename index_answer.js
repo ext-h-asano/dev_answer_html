@@ -64,7 +64,10 @@ function startVideo(localId, remoteId) {
 		}
 		// カメラとマイクの開始
 		const constraints = {
-			audio: true,
+			audio: {
+				deviceId: "O57U5p/9RXFcrElL5yf4pfkBE0AlenipJkVzfYj6l2k="
+
+			},
 			video: {
 				width: { min: 480 },
 				height: { min: 968 }
