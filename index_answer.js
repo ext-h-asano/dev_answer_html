@@ -111,7 +111,7 @@ function startServerConnection(localId, remoteId) {
 		sc.close();
 	}
 	// サーバー接続の開始
-	sc = new WebSocket('wss://' + '52.194.235.65' + ':' + sslPort + '/');
+	sc = new WebSocket('wss://' + 'signaling.android-vpn.com' + ':' + sslPort + '/');
 	sc.onmessage = gotMessageFromServer;
 	sc.onopen = function(event) {
 		console.log('[startServerConnection] WebSocket connection opened.');
