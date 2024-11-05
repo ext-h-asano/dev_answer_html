@@ -27,12 +27,14 @@ window.onload = function() {
 
 	// Local IDとRemote IDは別々の値を入力する
 	// Remote IDと対向のLocal IDが一致するとビデオ通話を開始する
-	while (!localId) {
-		localId = window.prompt('Local ID', '');
-	}
-	while (!remoteId) {
-		remoteId = window.prompt('Remote ID', '');
-	}
+	// while (!localId) {
+	// 	localId = window.prompt('Local ID', '');
+	// }
+	// while (!remoteId) {
+	// 	remoteId = window.prompt('Remote ID', '');
+	// }
+	localId = 'aaapython'
+	remoteId = 'bbbpython'
 	startVideo(localId, remoteId);
 
 	// 画面クリック時にメッセージを送信
