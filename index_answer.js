@@ -21,9 +21,24 @@ const peerConnectionConfig = {
 	]
 };
 
-window.onload = function() {
+window.onload = async function() {
 	// localVideo = document.getElementById('localVideo');
 	remoteVideo = document.getElementById('remoteVideo');
+
+	const waitForVariables = new Promise((resolve) => {
+		const checkVariables = () => {
+			if (typeof testlocalId !== 'undefined' && typeof testremoteId !== 'undefined') {
+				console.log('きた')
+				resolve();
+			} else {
+				setTimeout(checkVariables, 100);
+				console.log('まだ')
+			}
+		};
+		checkVariables();
+	});
+
+	await waitForVariables;
 
 	// Local IDとRemote IDは別々の値を入力する
 	// Remote IDと対向のLocal IDが一致するとビデオ通話を開始する
