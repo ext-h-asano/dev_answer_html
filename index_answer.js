@@ -27,7 +27,7 @@ window.onload = async function() {
 
 	const waitForVariables = new Promise((resolve) => {
 		const checkVariables = () => {
-			if (typeof testlocalId !== 'undefined' && typeof testremoteId !== 'undefined') {
+			if (typeof window.testlocalId !== 'undefined' && typeof window.testremoteId !== 'undefined') {
 				console.log('きた')
 				resolve();
 			} else {
