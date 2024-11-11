@@ -27,7 +27,7 @@ window.onload = async function() {
 
 	const waitForVariables = new Promise((resolve) => {
 		const checkVariables = () => {
-			if (typeof window.testlocalId !== 'undefined' && typeof window.testremoteId !== 'undefined') {
+			if (typeof window.testlocalId !== 'undefined' && typeof window.testremoteId !== 'undefined' && typeof window.v4l2width !== 'undefined' && typeof window.v4l2height !== 'undefined') {
 				console.log('きた')
 				resolve();
 			} else {
@@ -82,7 +82,10 @@ function startVideo(localId, remoteId) {
 		// カメラとマイクの開始
 		const constraints = {
 			audio: true,
-			video: true
+			video: {
+				width: {min: window.v4l2width},
+				height: {min: window.v4l2height}
+			}
 		};
 		console.log('[startVideo] Requesting user media with constraints:', constraints);
 		navigator.mediaDevices.getUserMedia(constraints).then(stream => {
