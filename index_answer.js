@@ -48,8 +48,8 @@ window.onload = async function() {
 	// while (!remoteId) {
 	// 	remoteId = window.prompt('Remote ID', '');
 	// }
-	localId = 'aaapython'
-	remoteId = 'bbbpython'
+	localId = window.testlocalId
+	remoteId = window.testremoteId
 	startVideo(localId, remoteId);
 
 	// 画面クリック時にメッセージを送信
