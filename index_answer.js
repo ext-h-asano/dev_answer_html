@@ -59,8 +59,9 @@ window.onload = async function() {
 	// 		sendMessage(message);
 	// 	}
 	// });
-	const audiodevice = navigator.mediaDevices.enumerateDevices()
-	console.log(audiodevice)
+	navigator.mediaDevices.enumerateDevices().then(function(devices){
+		console.log(devices)
+	})
 
 	}
 
