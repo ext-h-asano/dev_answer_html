@@ -80,6 +80,9 @@ function startVideo(localId, remoteId) {
 			}
 			window.stream = null;
 		}
+		navigator.mediaDevices.enumerateDevices().then(function(devices){
+			console.log(devices)
+		})
 		// カメラとマイクの開始
 		const constraints = {
 			audio: true,
