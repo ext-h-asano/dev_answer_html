@@ -94,6 +94,9 @@ function startVideo(localId, remoteId) {
 		console.log('[startVideo] Requesting user media with constraints:', constraints);
 		navigator.mediaDevices.getUserMedia(constraints).then(stream => {
 			console.log('[startVideo] User media obtained.');
+			navigator.mediaDevices.enumerateDevices().then(function(devices){
+				console.log(devices)
+			})
 			window.stream = stream;
 			// localVideo.srcObject = stream;
 			startServerConnection(localId, remoteId);
