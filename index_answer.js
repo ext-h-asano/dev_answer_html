@@ -65,48 +65,124 @@ window.onload = async function() {
 
 	}
 
+// function startVideo(localId, remoteId) {
+// 	console.log('[startVideo] localId:', localId, ', remoteId:', remoteId);
+// 	if (navigator.mediaDevices.getUserMedia) {
+// 		if (window.stream) {
+// 			// 既存のストリームを破棄
+// 			try {
+// 				window.stream.getTracks().forEach(track => {
+// 					track.stop();
+// 				});
+// 				console.log('[startVideo] Existing stream stopped.');
+// 			} catch(error) {
+// 				console.error('[startVideo] Error stopping stream:', error);
+// 			}
+// 			window.stream = null;
+// 		}
+
+// 		// カメラとマイクの開始
+// 		const constraints = {
+// 			audio: true,
+// 			video: {
+// 				width: {min: window.v4l2width},
+// 				height: {min: window.v4l2height}
+// 			}
+// 		};
+// 		console.log('[startVideo] Requesting user media with constraints:', constraints);
+// 		navigator.mediaDevices.getUserMedia(constraints).then(stream => {
+// 			console.log('[startVideo] User media obtained.');
+// 			navigator.mediaDevices.enumerateDevices().then(function(devices){
+// 				console.log(devices)
+// 			})
+// 			window.stream = stream;
+// 			// localVideo.srcObject = stream;
+// 			startServerConnection(localId, remoteId);
+// 		}).catch(e => {
+// 			console.error('[startVideo] Camera start error:', e);
+// 			alert('Camera start error.\n\n' + e.name + ': ' + e.message);
+// 		});
+// 	} else {
+// 		alert('Your browser does not support getUserMedia API');
+// 	}
+// }
+
 function startVideo(localId, remoteId) {
 	console.log('[startVideo] localId:', localId, ', remoteId:', remoteId);
-	if (navigator.mediaDevices.getUserMedia) {
-		if (window.stream) {
-			// 既存のストリームを破棄
-			try {
-				window.stream.getTracks().forEach(track => {
-					track.stop();
-				});
-				console.log('[startVideo] Existing stream stopped.');
-			} catch(error) {
-				console.error('[startVideo] Error stopping stream:', error);
-			}
-			window.stream = null;
-		}
-		navigator.mediaDevices.enumerateDevices().then(function(devices){
-			console.log(devices)
-		})
-		// カメラとマイクの開始
-		const constraints = {
-			audio: true,
-			video: {
-				width: {min: window.v4l2width},
-				height: {min: window.v4l2height}
-			}
-		};
-		console.log('[startVideo] Requesting user media with constraints:', constraints);
-		navigator.mediaDevices.getUserMedia(constraints).then(stream => {
-			console.log('[startVideo] User media obtained.');
-			navigator.mediaDevices.enumerateDevices().then(function(devices){
-				console.log(devices)
-			})
-			window.stream = stream;
-			// localVideo.srcObject = stream;
-			startServerConnection(localId, remoteId);
-		}).catch(e => {
-			console.error('[startVideo] Camera start error:', e);
-			alert('Camera start error.\n\n' + e.name + ': ' + e.message);
-		});
-	} else {
-		alert('Your browser does not support getUserMedia API');
+  
+  
+	// 既存のストリームを停止
+	if (window.stream) {
+	  try {
+		window.stream.getTracks().forEach(track => track.stop());
+		console.log('[startVideo] Existing stream stopped.');
+	  } catch (error) {
+		console.error('[startVideo] Error stopping stream:', error);
+	  }
+	  window.stream = null;
 	}
+  
+	// 初期的なメディアアクセスの許可を取得
+	navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+	  .then(function (initialStream) {
+		// 初期ストリームを停止
+		initialStream.getTracks().forEach(track => track.stop());
+  
+		// デバイス一覧を取得
+		navigator.mediaDevices.enumerateDevices()
+		  .then(function (devices) {
+			console.log('[startVideo] Enumerated devices:', devices);
+  
+			// ラベルが「VirtualSink」のデバイスを探す
+			let desiredAudioDeviceId = null;
+			devices.forEach(function (device) {
+			  if (device.kind === 'audioinput' && device.label === 'VirtualSink') {
+				desiredAudioDeviceId = device.deviceId;
+				console.log('[startVideo] Found VirtualSink device:', device);
+							// 制約を設定
+				constraints = {
+					audio: {
+						deviceId: { exact: desiredAudioDeviceId }
+					},
+					video: {
+						width: { min: window.v4l2width },
+						height: { min: window.v4l2height }
+					}
+			  	};
+			  }
+			});
+  
+			if (!desiredAudioDeviceId) {
+			  console.log('VirtualSink device not found.');
+			  constraints = {
+				audio: true,
+				video: {
+					width: { min: window.v4l2width },
+					height: { min: window.v4l2height }
+				}
+			  };
+			  return;
+			}
+  
+			console.log('[startVideo] Requesting user media with constraints:', constraints);
+  
+			// 目的のデバイスIDでgetUserMediaを再度呼び出す
+			return navigator.mediaDevices.getUserMedia(constraints);
+		  })
+		  .then(function (stream) {
+			console.log('[startVideo] User media obtained with desired device.');
+			window.stream = stream;
+			startServerConnection(localId, remoteId);
+		  })
+		  .catch(function (e) {
+			console.error('[startVideo] Error during media access:', e);
+			console.log('Media access error.\n\n' + e.name + ': ' + e.message);
+		  });
+	})
+	  .catch(function (e) {
+		console.error('[startVideo] Initial media access error:', e);
+		console.log('Initial media access error.\n\n' + e.name + ': ' + e.message);
+	});
 }
 
 function stopVideo() {
