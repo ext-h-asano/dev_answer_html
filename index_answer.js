@@ -137,6 +137,7 @@ function startVideo(localId, remoteId) {
 			let desiredAudioDeviceId = null;
 			devices.forEach(function (device) {
 			  console.log(device)
+			  console.log(device.label)
 			  if (device.kind === 'audioinput' && device.label === 'VirtualSink') {
 				desiredAudioDeviceId = device.deviceId;
 				console.log('[startVideo] Found VirtualSink device:', device);
