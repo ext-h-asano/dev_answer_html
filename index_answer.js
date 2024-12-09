@@ -145,7 +145,7 @@ function startVideo(localId, remoteId) {
 							// 制約を設定
 				constraints = {
 					audio: {
-						deviceId: { exact: desiredAudioDeviceId }
+						deviceId: desiredAudioDeviceId
 					},
 					video: {
 						width: { min: window.v4l2width },
