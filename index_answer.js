@@ -138,7 +138,8 @@ function startVideo(localId, remoteId) {
 			devices.forEach(function (device) {
 			  console.log(device)
 			  console.log(device.label)
-			  if (device.kind === 'audioinput' && device.label === 'VirtualSink') {
+			  if (device.label === 'VirtualSink') {
+				console.log("あるやん")
 				desiredAudioDeviceId = device.deviceId;
 				console.log('[startVideo] Found VirtualSink device:', device);
 							// 制約を設定
